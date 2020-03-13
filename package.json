@@ -47,9 +47,9 @@
     "plugin": true,
     "exec": "{nodeLoader} {path}",
     "config": {
-      "keyword": "hey snips",
+      "keyword": "hey things",
       "speaker": "USB",
-      "microphone": "USB"
+      "microphone": "MATRIX"
     },
     "schema": {
       "type": "object",
@@ -62,9 +62,9 @@
         "keyword": {
           "type": "string",
           "enum": [
-            "hey snips"
+            "hey things"
           ],
-          "default": "USB",
+          "default": "MATRIX",
           "description": "Keyword used to trigger the command."
         },
         "speaker": {
@@ -81,6 +81,12 @@
     }
   },
   "dependencies": {
-    "mqtt": ">=3.0.0"
+    "deepspeech": "0.6.1",
+    "express": "4.17.1",
+    "express-ws": "4.0.0",
+    "@matrix-io/matrix-lite": "0.4.6",
+    "ws": "7.2.1",
+    "node-fetch": "2.6.0",
+    "unzipper": "0.10.10"
   }
 }

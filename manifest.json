@@ -16,9 +16,9 @@
   "name": "Voice Control",
   "options": {
     "default": {
-      "keyword": "hey snips",
+      "keyword": "hey things",
       "speaker": "USB",
-      "microphone": "USB"
+      "microphone": "MATRIX"
     },
     "schema": {
       "type": "object",
@@ -31,9 +31,9 @@
         "keyword": {
           "type": "string",
           "enum": [
-            "hey snips"
+            "hey things"
           ],
-          "default": "USB",
+          "default": "MATRIX",
           "description": "Keyword used to trigger the command."
         },
         "speaker": {

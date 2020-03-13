@@ -8,23 +8,24 @@
 
 'use strict';
 
-const mqtt = require('mqtt');
 const https = require('https');
 const spawn = require('child_process').spawn;
 const fs = require('fs');
 const path = require('path');
 const {Adapter, Device, Property, Event} = require('gateway-addon');
 
+const DsAPIHandler = require('./ds-api-handler');
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 let token, keyword, speaker, microphone;
-let pixel_ring_service;
 
 class ActiveProperty extends Property {
   constructor(device, name, propertyDescription) {
     super(device, name, propertyDescription);
     this.setCachedValue(propertyDescription.value);
     this.device.notifyPropertyChanged(this);
+    console.log('ActiveProperty:' + name);
   }
 
   /**
@@ -38,25 +39,8 @@ class ActiveProperty extends Property {
    */
   setValue(value) {
     if (value) {
+      console.log('ActiveProperty:' + name + ' -> ' + value);
       // spawn training
-      console.log('spawn training');
-      this.training_process = spawn(
-        'python2',
-        ['script_recording.py', keyword],
-        {cwd: __dirname}
-      );
-      this.training_process.stdout.setEncoding('utf8');
-      this.training_process.stdout.on('data', (data) => {
-        console.log(`DATA: ${data.toString()}`);
-      });
-      this.training_process.stderr.on('data', (data) => {
-        console.log(`ERROR: ${data.toString()}`);
-      });
-      this.training_process.on('close', (code) => {
-        console.log(`process exit code ${code}`);
-        this.setCachedValue(false);
-        this.device.notifyPropertyChanged(this);
-      });
       this.device.eventNotify(new Event(this.device,
                                         'training',
                                         'started'));
@@ -64,10 +48,6 @@ class ActiveProperty extends Property {
       console.log('shutdown training');
       // shutdown training
       if (this.training_process) {
-        this.training_process.stderr.pause();
-        this.training_process.stdout.pause();
-        this.training_process.stdin.pause();
-        this.training_process.kill('SIGTERM');
         this.device.eventNotify(new Event(this.device,
                                           'training',
                                           'ended'));
@@ -87,12 +67,15 @@ class ActiveProperty extends Property {
 class VoiceDevice extends Device {
   constructor(adapter, id, deviceDescription) {
     super(adapter, id);
+    console.log('VoiceDevice:' + deviceDescription.name);
+
     this.name = deviceDescription.name;
     this.type = deviceDescription.type;
     this['@type'] = deviceDescription['@type'];
     this.description = deviceDescription.description;
     for (const propertyName in deviceDescription.properties) {
       const propertyDescription = deviceDescription.properties[propertyName];
+      console.log('VoiceDevice:' + deviceDescription.name + ':' + propertyName);
       const property = new ActiveProperty(this, propertyName,
                                           propertyDescription);
       this.properties.set(propertyName, property);
@@ -108,148 +91,22 @@ class VoiceDevice extends Device {
                     deviceDescription.events[event].metadata);
     }
 
-    this.mqttListener = new MqttListener(this);
-    this.mqttListener.connect();
-  }
-}
+    this.ds = adapter.getDsApi();
 
-class MqttListener {
-  constructor(device) {
-    // connect to snips mqtt
-    this.client = mqtt.connect('mqtt://127.0.0.1');
-    this.HERMES_KWS = 'hermes/hotword/default/detected';
-    this.HERMES_ASR = 'hermes/asr/textCaptured';
-    setInterval(this.call_things_api.bind(this), 10000);
-    this.things = [];
-    this.device = device;
+    this.ds.events.on('transcript', this.dsEvent.bind(this));
+    this.ds.events.on('silence', this.dsEvent.bind(this));
+
+    console.log('VoiceDevice:' + deviceDescription.name + ': start listening');
+
+    console.log('Waiting on acoustic deepspeech model to be ready');
+    this.ds.events.on('acoustic-model-ready', () => {
+      console.log('Starting Matrix');
+      this.ds.startMatrixMic();
+    })
   }
 
-  connect() {
-    this.client.on('connect', function() {
-      console.log('conectado');
-      this.call_things_api();
-      this.client.subscribe(this.HERMES_KWS, function(err) {
-        if (err) {
-          console.log('mqtt error hermes/hotword/default/detected');
-        }
-      });
-      this.client.subscribe(this.HERMES_ASR, function(err) {
-        if (err) {
-          console.log('mqtt error hermes/asr/textCaptured');
-        }
-      });
-    }.bind(this));
-
-    this.client.on('message', function(topic, message) {
-      if (topic === this.HERMES_ASR) {
-        console.log(`mensagem no mqtt no addon ${message}`);
-        this.call_commands_api(JSON.parse(message));
-        this.device.eventNotify(new Event(this.device,
-                                          'speechinput',
-                                          'detected'));
-      } else if (topic === this.HERMES_KWS) {
-        this.device.eventNotify(new Event(this.device,
-                                          'wakeword',
-                                          'detected'));
-        spawn(
-          'aplay',
-          ['end_spot.wav'],
-          {cwd: path.join(__dirname, 'assets')}
-        );
-      }
-    }.bind(this));
-  }
-
-  call_commands_api(command) {
-    try {
-      const postData = JSON.stringify({
-        text: command.text,
-      });
-      this.doHTTPRequest('/commands', postData);
-      this.device.eventNotify(new Event(this.device,
-                                        'command',
-                                        command.text));
-    } catch (err) {
-      console.log(`Error calling commands api: ${err}`);
-      this.device.eventNotify(new Event(this.device,
-                                        'command',
-                                        `Error calling commands api: ${err}`));
-    }
-  }
-
-  call_things_api() {
-    this.doHTTPRequest('/things', null, (response) => {
-      try {
-        const json_things = JSON.parse(response);
-        const temp_things = [];
-        for (const i in json_things) {
-          for (const key in json_things[i]) {
-            if (key === 'title') {
-              temp_things.push(json_things[i][key]);
-            }
-          }
-        }
-
-        if (JSON.stringify(temp_things.sort()) !==
-            JSON.stringify(this.things.sort())) {
-          console.log('different set of things. retrain: ');
-          const train_json = {
-            operations: [['addFromVanilla', {thing: []}]],
-          };
-          train_json.operations[0][1].thing = temp_things;
-          this.things = temp_things;
-          this.client.publish('hermes/injection/perform',
-                              JSON.stringify(train_json));
-        }
-      } catch (err) {
-        console.log(`Error calling things api: ${err}`);
-      }
-    });
-  }
-
-  doHTTPRequest(command, postData, callback) {
-    if (token === '') {
-      console.log(`Token not set. Aborting call`);
-      return;
-    }
-    let method = 'POST';
-    if (postData === null) {
-      postData = '';
-      method = 'GET';
-    }
-    const options = {
-      hostname: '127.0.0.1',
-      port: 4443,
-      path: `${command}`,
-      method: `${method}`,
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${token}`,
-        'Content-Length': Buffer.byteLength(postData),
-        'Content-Type': 'application/json',
-      },
-    };
-
-    const req = https.request(options, (res) => {
-      let chunks = '';
-      res.setEncoding('utf8');
-      res.on('data', (chunk) => {
-        chunks += chunk;
-      });
-      res.on('end', () => {
-        if (callback) {
-          callback(chunks);
-        }
-      });
-    });
-
-    req.on('error', (e) => {
-      console.error(`problem with request: ${e.message}`);
-    });
-
-    // write data to request body
-    req.write(postData);
-    req.end();
+  dsEvent(ev) {
+    console.log('VoiceDevice:dsEvent: ' + JSON.stringify(ev));
   }
 }
 
@@ -257,6 +114,26 @@ class VoiceAdapter extends Adapter {
   constructor(addonManager, packageName) {
     super(addonManager, 'VoiceAdapter', packageName);
     addonManager.addAdapter(this);
+    console.log('VoiceAdapter:' + packageName);
+    this.savedDevices = new Set();
+    this._dsApi = this.startDsApi(addonManager);
+  }
+
+  getDsApi() {
+    return this._dsApi;
+  }
+
+  startDsApi(addonManager) {
+    console.log('Launching DsAPI from DsAdapter');
+    return new DsAPIHandler(addonManager);
+  }
+
+  handleDeviceSaved(deviceId, deviceFull) {
+    console.log('DsAdapter discover device: ' + deviceId);
+    this.savedDevices.add(deviceFull);
+    if (this._dsApi) {
+      this._dsApi.generateLocalLM(this.savedDevices);
+    }
   }
 
   /**
@@ -269,6 +146,7 @@ class VoiceAdapter extends Adapter {
    * @return {Promise} which resolves to the device added.
    */
   addDevice(deviceId, deviceDescription) {
+    console.log('VoiceAdapter:addDevice' + deviceId);
     return new Promise((resolve, reject) => {
       if (deviceId in this.devices) {
         reject(`Device: ${deviceId} already exists.`);
@@ -289,6 +167,7 @@ class VoiceAdapter extends Adapter {
    * @return {Promise} which resolves to the device removed.
    */
   removeDevice(deviceId) {
+    console.log('VoiceAdapter:removeDevice' + deviceId);
     return new Promise((resolve, reject) => {
       const device = this.devices[deviceId];
       if (device) {
@@ -348,34 +227,13 @@ class VoiceAdapter extends Adapter {
   // cleanup
   unload() {
     return new Promise((resolve) => {
-      if (pixel_ring_service) {
-        pixel_ring_service.stderr.pause();
-        pixel_ring_service.stdout.pause();
-        pixel_ring_service.stdin.pause();
-        pixel_ring_service.kill('SIGTERM');
-      }
-      console.log(`unloaded addon ${pixel_ring_service}`);
-      const snips_uninstall = spawn(
-        'bash',
-        ['install_deps.sh', 'uninstall'],
-        {cwd: path.join(__dirname, 'deps')}
-      );
-      snips_uninstall.stdout.on('data', (data) => {
-        console.log(`DATA snips_uninstall: ${data.toString()}`);
-      });
-      snips_uninstall.stderr.on('data', (data) => {
-        console.log(`Error executing install_script.sh ${data}`);
-      });
-      snips_uninstall.on('close', (code) => {
-        console.log(`End of snips_uninstall ${code}`);
-        resolve();
-      });
+      console.log('VoiceAdapter: unload');
     });
   }
 }
 
 function loadVoiceAdapter(addonManager, manifest, _errorCallback) {
-  checkInstallation();
+  // checkInstallation();
   token = manifest.moziot.config.token;
   keyword = manifest.moziot.config.keyword;
   speaker = manifest.moziot.config.speaker;
