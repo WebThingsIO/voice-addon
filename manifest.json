@@ -16,9 +16,8 @@
   "name": "Voice Control",
   "options": {
     "default": {
-      "keyword": "hey things",
       "speaker": "USB",
-      "microphone": "MATRIX"
+      "microphone": "USB"
     },
     "schema": {
       "type": "object",
@@ -28,17 +27,17 @@
           "type": "string",
           "description": "Navigate to Settings -> Developer -> Create local authorization -> Allow. Then copy the presented JSON Web Token in this field"
         },
-        "keyword": {
-          "type": "string",
-          "enum": [
-            "hey things"
-          ],
-          "default": "MATRIX",
-          "description": "Keyword used to trigger the command."
-        },
         "speaker": {
           "type": "string",
           "enum": [
+            "USB"
+          ],
+          "default": "USB"
+        },
+        "microphone": {
+          "type": "string",
+          "enum": [
+            "MATRIX",
             "USB"
           ],
           "default": "USB"

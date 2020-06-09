@@ -8,8 +8,6 @@
 
 'use strict';
 
-const https = require('https');
-const spawn = require('child_process').spawn;
 const fs = require('fs');
 const path = require('path');
 const {Adapter, Device, Property, Event} = require('gateway-addon');
@@ -18,14 +16,14 @@ const DsAPIHandler = require('./ds-api-handler');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-let token, keyword, speaker, microphone;
+let token, speaker, microphone;
 
 class ActiveProperty extends Property {
   constructor(device, name, propertyDescription) {
     super(device, name, propertyDescription);
     this.setCachedValue(propertyDescription.value);
     this.device.notifyPropertyChanged(this);
-    console.log('ActiveProperty:' + name);
+    console.log(`ActiveProperty:${name}`);
   }
 
   /**
@@ -39,7 +37,7 @@ class ActiveProperty extends Property {
    */
   setValue(value) {
     if (value) {
-      console.log('ActiveProperty:' + name + ' -> ' + value);
+      console.log(`ActiveProperty:${name} -> ${value}`);
       // spawn training
       this.device.eventNotify(new Event(this.device,
                                         'training',
@@ -67,7 +65,7 @@ class ActiveProperty extends Property {
 class VoiceDevice extends Device {
   constructor(adapter, id, deviceDescription) {
     super(adapter, id);
-    console.log('VoiceDevice:' + deviceDescription.name);
+    console.log(`VoiceDevice:${deviceDescription.name}`);
 
     this.name = deviceDescription.name;
     this.type = deviceDescription.type;
@@ -75,7 +73,7 @@ class VoiceDevice extends Device {
     this.description = deviceDescription.description;
     for (const propertyName in deviceDescription.properties) {
       const propertyDescription = deviceDescription.properties[propertyName];
-      console.log('VoiceDevice:' + deviceDescription.name + ':' + propertyName);
+      console.log(`VoiceDevice:${deviceDescription.name}:${propertyName}`);
       const property = new ActiveProperty(this, propertyName,
                                           propertyDescription);
       this.properties.set(propertyName, property);
@@ -96,17 +94,17 @@ class VoiceDevice extends Device {
     this.ds.events.on('transcript', this.dsEvent.bind(this));
     this.ds.events.on('silence', this.dsEvent.bind(this));
 
-    console.log('VoiceDevice:' + deviceDescription.name + ': start listening');
+    console.log(`VoiceDevice:${deviceDescription.name}: start listening`);
 
     console.log('Waiting on acoustic deepspeech model to be ready');
     this.ds.events.on('acoustic-model-ready', () => {
       console.log('Starting Matrix');
       this.ds.startMatrixMic();
-    })
+    });
   }
 
   dsEvent(ev) {
-    console.log('VoiceDevice:dsEvent: ' + JSON.stringify(ev));
+    console.log(`VoiceDevice:dsEvent: ${JSON.stringify(ev)}`);
   }
 }
 
@@ -114,7 +112,7 @@ class VoiceAdapter extends Adapter {
   constructor(addonManager, packageName) {
     super(addonManager, 'VoiceAdapter', packageName);
     addonManager.addAdapter(this);
-    console.log('VoiceAdapter:' + packageName);
+    console.log(`VoiceAdapter:${packageName}`);
     this.savedDevices = new Set();
     this._dsApi = this.startDsApi(addonManager);
   }
@@ -129,7 +127,7 @@ class VoiceAdapter extends Adapter {
   }
 
   handleDeviceSaved(deviceId, deviceFull) {
-    console.log('DsAdapter discover device: ' + deviceId);
+    console.log(`DsAdapter discover device: ${deviceId}`);
     this.savedDevices.add(deviceFull);
     if (this._dsApi) {
       this._dsApi.generateLocalLM(this.savedDevices);
@@ -146,7 +144,7 @@ class VoiceAdapter extends Adapter {
    * @return {Promise} which resolves to the device added.
    */
   addDevice(deviceId, deviceDescription) {
-    console.log('VoiceAdapter:addDevice' + deviceId);
+    console.log(`VoiceAdapter:addDevice${deviceId}`);
     return new Promise((resolve, reject) => {
       if (deviceId in this.devices) {
         reject(`Device: ${deviceId} already exists.`);
@@ -167,7 +165,7 @@ class VoiceAdapter extends Adapter {
    * @return {Promise} which resolves to the device removed.
    */
   removeDevice(deviceId) {
-    console.log('VoiceAdapter:removeDevice' + deviceId);
+    console.log(`VoiceAdapter:removeDevice${deviceId}`);
     return new Promise((resolve, reject) => {
       const device = this.devices[deviceId];
       if (device) {
@@ -226,7 +224,7 @@ class VoiceAdapter extends Adapter {
 
   // cleanup
   unload() {
-    return new Promise((resolve) => {
+    return new Promise(() => {
       console.log('VoiceAdapter: unload');
     });
   }
@@ -234,7 +232,6 @@ class VoiceAdapter extends Adapter {
 
 function loadVoiceAdapter(addonManager, manifest, _errorCallback) {
   token = manifest.moziot.config.token;
-  keyword = manifest.moziot.config.keyword;
   speaker = manifest.moziot.config.speaker;
   microphone = manifest.moziot.config.microphone;
   console.log(`microphone ${microphone}`);
@@ -263,12 +260,11 @@ function loadVoiceAdapter(addonManager, manifest, _errorCallback) {
   const device = new VoiceDevice(adapter, 'voice-controller', {
     name: 'voice-controller',
     '@type': ['OnOffSwitch'],
-    type: 'onOffSwitch',
     description: 'Voice Controller',
     properties: {
       on: {
         '@type': 'OnOffProperty',
-        label: 'On/Off',
+        title: 'On/Off',
         name: 'on',
         type: 'boolean',
         value: false,
