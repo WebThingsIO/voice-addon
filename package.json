@@ -1,7 +1,7 @@
 {
   "name": "voice-addon",
   "display_name": "Voice Control",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "Hands-free voice addon with personalized keyword and local voice processing.",
   "author": "André Natal",
   "main": "index.js",
@@ -24,20 +24,21 @@
     "url": "https://github.com/andrenatal/voice-addon/issues"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.3",
-    "eslint": "^6.7.0"
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.2.0"
   },
   "files": [
     "LICENSE",
     "README.md",
     "SHA256SUMS",
-    "voice-adapter.js",
+    "bin/build_binary",
+    "bin/lmplz",
+    "deepspeech.js",
+    "ds-api-handler.js",
     "index.js",
-    "deps/install_deps.sh",
-    "deps/dependencies.zip",
-    "assets/end_spot.wav",
     "manifest.json",
-    "node_modules"
+    "node_modules",
+    "voice-adapter.js"
   ],
   "moziot": {
     "api": {
@@ -85,8 +86,8 @@
     "express": "4.17.1",
     "express-ws": "4.0.0",
     "@matrix-io/matrix-lite": "0.4.6",
-    "ws": "7.2.1",
+    "ws": "7.3.0",
     "node-fetch": "2.6.0",
-    "unzipper": "0.10.10"
+    "unzipper": "0.10.11"
   }
 }

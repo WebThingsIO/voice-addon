@@ -233,7 +233,6 @@ class VoiceAdapter extends Adapter {
 }
 
 function loadVoiceAdapter(addonManager, manifest, _errorCallback) {
-  // checkInstallation();
   token = manifest.moziot.config.token;
   keyword = manifest.moziot.config.keyword;
   speaker = manifest.moziot.config.speaker;
@@ -307,20 +306,6 @@ function loadVoiceAdapter(addonManager, manifest, _errorCallback) {
     ],
   });
   adapter.handleDeviceAdded(device);
-}
-
-function checkInstallation() {
-  const snips_installation = spawn(
-    'bash',
-    ['install_deps.sh', 'install'],
-    {cwd: path.join(__dirname, 'deps')}
-  );
-  snips_installation.stdout.on('data', (data) => {
-    console.log(`DATA snips_installation: ${data.toString()}`);
-  });
-  snips_installation.stderr.on('data', (data) => {
-    console.log(`Error executing install_script.sh ${data}`);
-  });
 }
 
 module.exports = loadVoiceAdapter;
