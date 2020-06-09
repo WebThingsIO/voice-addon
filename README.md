@@ -1,16 +1,24 @@
-voice-addon
-===========
-[![Build Status](https://travis-ci.org/andrenatal/voice-addon.svg?branch=master)](https://travis-ci.org/andrenatal/voice-addon)
-- `cd ~/.mozilla-iot/addons`
-- `git clone https://github.com/andrenatal/voice-addon`
-- `cd voice-addon`
-- `npm install`
-- `./install_script.sh`
-- Open up https://gateway.local (or your gateway's url if different) in a browser
-- Navigate to Settings > Add-ons
-- Click configure on Voice Addon, follow instructions to get token
-- Enable Voice Addon
-- Navigate to Things
-- Add Voice Addon thing
-- Click Voice Addon's button to train
+# voice-addon
 
+A voice add-on for the
+[Mozilla WebThings Gateway](https://github.com/mozilla/DeepSpeech) which uses
+[DeepSpeech](https://github.com/mozilla/DeepSpeech) as the speech-to-text (STT)
+engine.
+
+The add-on uses a USB microphone attached to the Raspberry Pi. Currently, the
+add-on always listens in the background for new commands, as there is no wake
+word. This is a work in progress.
+
+## Usage
+
+* Open up the gateway's UI in a browser.
+* Navigate to _Settings -> Add-ons_.
+* Click _Configure_ on _Voice Addon_ and follow the instructions to get a token.
+* Navigate to the _Things_ page.
+* Click the + button in the lower right corner and add the _Voice Addon_
+  "device".
+* Speak commands into the microphone attached to your Raspberry Pi.
+
+## Sample Commands
+
+TODO
