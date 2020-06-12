@@ -9,8 +9,15 @@
 'use strict';
 
 const fs = require('fs');
+const {
+  Adapter,
+  Database,
+  Device,
+  Property,
+  Event,
+} = require('gateway-addon');
+const manifest = require('./manifest.json');
 const path = require('path');
-const {Adapter, Device, Property, Event} = require('gateway-addon');
 
 const DsAPIHandler = require('./ds-api-handler');
 
@@ -109,10 +116,9 @@ class VoiceDevice extends Device {
 }
 
 class VoiceAdapter extends Adapter {
-  constructor(addonManager, packageName) {
-    super(addonManager, 'VoiceAdapter', packageName);
+  constructor(addonManager) {
+    super(addonManager, manifest.id, manifest.id);
     addonManager.addAdapter(this);
-    console.log(`VoiceAdapter:${packageName}`);
     this.savedDevices = new Set();
     this._dsApi = this.startDsApi(addonManager);
   }
@@ -230,78 +236,83 @@ class VoiceAdapter extends Adapter {
   }
 }
 
-function loadVoiceAdapter(addonManager, manifest, _errorCallback) {
-  token = manifest.moziot.config.token;
-  speaker = manifest.moziot.config.speaker;
-  microphone = manifest.moziot.config.microphone;
-  console.log(`microphone ${microphone}`);
-  console.log(`speaker ${speaker}`);
+function loadVoiceAdapter(addonManager) {
+  const db = new Database(manifest.id);
+  db.open().then(() => {
+    return db.loadConfig();
+  }).then((config) => {
+    token = config.token;
+    speaker = config.speaker;
+    microphone = config.microphone;
+    console.log(`microphone ${microphone}`);
+    console.log(`speaker ${speaker}`);
 
-  let capture_pcm = '';
-  let playback_pcm = '';
+    let capture_pcm = '';
+    let playback_pcm = '';
 
-  if (microphone === 'USB') {
-    capture_pcm = 'capture.pcm { \n type plug \n slave.pcm \'hw:1,0\' \n }';
-  }
+    if (microphone === 'USB') {
+      capture_pcm = 'capture.pcm { \n type plug \n slave.pcm \'hw:1,0\' \n }';
+    }
 
-  if (speaker === 'USB') {
-    playback_pcm = 'playback.pcm { \n type plug \n slave.pcm \'hw:1,0\' \n }';
-  } else {
-    playback_pcm = 'playback.pcm { \n type plug \n slave.pcm \'hw:0,0\' \n }';
-  }
+    if (speaker === 'USB') {
+      playback_pcm = 'playback.pcm { \n type plug \n slave.pcm \'hw:1,0\' \n }';
+    } else {
+      playback_pcm = 'playback.pcm { \n type plug \n slave.pcm \'hw:0,0\' \n }';
+    }
 
-  console.log('writing asound.conf');
-  const asound_tpl =
-    `pcm.!default { \n type asym \n ${playback_pcm} \n ${capture_pcm} \n } \n`;
-  fs.writeFileSync(path.join(__dirname, 'asound.conf'), asound_tpl);
-  console.log('asound.conf written');
+    console.log('writing asound.conf');
+    const asound_tpl =
+      `pcm.!default { \n type asym \n ${playback_pcm} \n ${capture_pcm} \n }\n`;
+    fs.writeFileSync(path.join(__dirname, 'asound.conf'), asound_tpl);
+    console.log('asound.conf written');
 
-  const adapter = new VoiceAdapter(addonManager, manifest.name);
-  const device = new VoiceDevice(adapter, 'voice-controller', {
-    name: 'voice-controller',
-    '@type': ['OnOffSwitch'],
-    description: 'Voice Controller',
-    properties: {
-      on: {
-        '@type': 'OnOffProperty',
-        title: 'On/Off',
-        name: 'on',
-        type: 'boolean',
-        value: false,
-      },
-    },
-    events: [
-      {
-        name: 'wakeword',
-        metadata: {
-          description: 'A wakeword was deteced',
-          type: 'string',
+    const adapter = new VoiceAdapter(addonManager);
+    const device = new VoiceDevice(adapter, 'voice-controller', {
+      name: 'voice-controller',
+      '@type': ['OnOffSwitch'],
+      description: 'Voice Controller',
+      properties: {
+        on: {
+          '@type': 'OnOffProperty',
+          title: 'On/Off',
+          name: 'on',
+          type: 'boolean',
+          value: false,
         },
       },
-      {
-        name: 'speechinput',
-        metadata: {
-          description: 'A voice command was detected',
-          type: 'string',
+      events: [
+        {
+          name: 'wakeword',
+          metadata: {
+            description: 'A wakeword was deteced',
+            type: 'string',
+          },
         },
-      },
-      {
-        name: 'command',
-        metadata: {
-          description: 'A web thing command was executed',
-          type: 'string',
+        {
+          name: 'speechinput',
+          metadata: {
+            description: 'A voice command was detected',
+            type: 'string',
+          },
         },
-      },
-      {
-        name: 'training',
-        metadata: {
-          description: 'Wakeword training started',
-          type: 'string',
+        {
+          name: 'command',
+          metadata: {
+            description: 'A web thing command was executed',
+            type: 'string',
+          },
         },
-      },
-    ],
-  });
-  adapter.handleDeviceAdded(device);
+        {
+          name: 'training',
+          metadata: {
+            description: 'Wakeword training started',
+            type: 'string',
+          },
+        },
+      ],
+    });
+    adapter.handleDeviceAdded(device);
+  }).catch(console.error);
 }
 
 module.exports = loadVoiceAdapter;
