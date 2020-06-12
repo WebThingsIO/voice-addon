@@ -3,7 +3,7 @@
   "display_name": "Voice Control",
   "version": "2.0.0",
   "description": "Hands-free voice addon with personalized keyword and local voice processing.",
-  "author": "André Natal",
+  "author": "Michael Stegeman",
   "main": "index.js",
   "scripts": {
     "lint": "eslint ."
@@ -14,14 +14,14 @@
     "adapter",
     "voice"
   ],
-  "homepage": "https://github.com/andrenatal/voice-addon",
+  "homepage": "https://github.com/mrstegeman/voice-addon",
   "license": "MPL-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/andrenatal/voice-addon.git"
+    "url": "https://github.com/mrstegeman/voice-addon.git"
   },
   "bugs": {
-    "url": "https://github.com/andrenatal/voice-addon/issues"
+    "url": "https://github.com/mrstegeman/voice-addon/issues"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",

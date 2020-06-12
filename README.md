@@ -22,3 +22,7 @@ word. This is a work in progress.
 ## Sample Commands
 
 TODO
+
+## Credits
+
+This add-on was originally created by André Natal (@andrenatal).
