@@ -9,6 +9,12 @@ The add-on uses a USB microphone attached to the Raspberry Pi. Currently, the
 add-on always listens in the background for new commands, as there is no wake
 word. This is a work in progress.
 
+## Requirements
+
+* On Linux, `arecord` is required, typically provided by the `alsa-utils`
+  package.
+* On macOS, `sox` is required.
+
 ## Usage
 
 * Open up the gateway's UI in a browser.

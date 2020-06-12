@@ -37,6 +37,7 @@
         "microphone": {
           "type": "string",
           "enum": [
+            "Analog",
             "MATRIX",
             "USB"
           ],

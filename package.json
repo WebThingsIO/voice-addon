@@ -39,6 +39,8 @@
     "lib/adapter.js",
     "lib/deep-speech-interface.js",
     "lib/deep-speech-worker.js",
+    "lib/matrix-microphone.js",
+    "lib/system-microphone.js",
     "manifest.json",
     "node_modules"
   ],
@@ -71,6 +73,7 @@
         "microphone": {
           "type": "string",
           "enum": [
+            "Analog",
             "MATRIX",
             "USB"
           ],
@@ -86,6 +89,7 @@
     "deepspeech": "0.6.1",
     "express": "4.17.1",
     "express-ws": "4.0.0",
+    "mic": "^2.1.2",
     "ws": "7.3.0"
   },
   "optionalDependencies": {
