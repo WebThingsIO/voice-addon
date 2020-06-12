@@ -2,7 +2,8 @@
 *.swp
 *.tgz
 *~
-/bin
-/kenlm
+/asound.conf
+/bin/
+/kenlm/
+/node_modules/
 SHA256SUMS
-node_modules

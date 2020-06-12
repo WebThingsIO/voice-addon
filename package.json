@@ -31,12 +31,14 @@
     "LICENSE",
     "README.md",
     "SHA256SUMS",
+    "assets/info.json",
+    "assets/output_graph.tflite",
     "bin/build_binary",
     "bin/lmplz",
     "index.js",
     "lib/adapter.js",
     "lib/deep-speech-interface.js",
-    "lib/deepspeech.js",
+    "lib/deep-speech-worker.js",
     "manifest.json",
     "node_modules"
   ],
@@ -84,9 +86,7 @@
     "deepspeech": "0.6.1",
     "express": "4.17.1",
     "express-ws": "4.0.0",
-    "ws": "7.3.0",
-    "node-fetch": "2.6.0",
-    "unzipper": "0.10.11"
+    "ws": "7.3.0"
   },
   "optionalDependencies": {
     "@matrix-io/matrix-lite": "0.4.6"

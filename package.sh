@@ -22,7 +22,7 @@ rm -rf node_modules
 
 npm install --production
 
-shasum --algorithm 256 manifest.json package.json *.js lib/*.js LICENSE README.md bin/* > SHA256SUMS
+shasum --algorithm 256 manifest.json package.json *.js lib/*.js LICENSE README.md assets/* bin/* > SHA256SUMS
 
 find node_modules -xtype l -delete
 find node_modules \( -type f -o -type l \) -exec shasum --algorithm 256 {} \; >> SHA256SUMS
