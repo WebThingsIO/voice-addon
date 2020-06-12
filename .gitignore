@@ -2,5 +2,7 @@
 *.swp
 *.tgz
 *~
+/bin
+/kenlm
 SHA256SUMS
 node_modules

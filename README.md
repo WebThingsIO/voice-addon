@@ -14,9 +14,6 @@ word. This is a work in progress.
 * Open up the gateway's UI in a browser.
 * Navigate to _Settings -> Add-ons_.
 * Click _Configure_ on _Voice Addon_ and follow the instructions to get a token.
-* Navigate to the _Things_ page.
-* Click the + button in the lower right corner and add the _Voice Addon_
-  "device".
 * Speak commands into the microphone attached to your Raspberry Pi.
 
 ## Sample Commands

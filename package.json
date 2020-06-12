@@ -33,12 +33,12 @@
     "SHA256SUMS",
     "bin/build_binary",
     "bin/lmplz",
-    "deepspeech.js",
-    "ds-api-handler.js",
     "index.js",
+    "lib/adapter.js",
+    "lib/deep-speech-interface.js",
+    "lib/deepspeech.js",
     "manifest.json",
-    "node_modules",
-    "voice-adapter.js"
+    "node_modules"
   ],
   "moziot": {
     "api": {
@@ -84,9 +84,11 @@
     "deepspeech": "0.6.1",
     "express": "4.17.1",
     "express-ws": "4.0.0",
-    "@matrix-io/matrix-lite": "0.4.6",
     "ws": "7.3.0",
     "node-fetch": "2.6.0",
     "unzipper": "0.10.11"
+  },
+  "optionalDependencies": {
+    "@matrix-io/matrix-lite": "0.4.6"
   }
 }
