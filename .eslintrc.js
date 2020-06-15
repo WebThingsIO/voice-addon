@@ -95,7 +95,10 @@ module.exports = {
     ],
     'max-len': [
       'error',
-      80
+      {
+        'code': 80,
+        'ignoreTemplateLiterals': true
+      }
     ],
     'multiline-ternary': [
       'error',
@@ -115,6 +118,7 @@ module.exports = {
       }
     ],
     'no-multiple-empty-lines': 'error',
+    'no-prototype-builtins': 'off',
     'no-return-assign': 'error',
     'no-script-url': 'error',
     'no-self-compare': 'error',

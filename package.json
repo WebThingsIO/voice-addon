@@ -90,6 +90,7 @@
     "express": "4.17.1",
     "express-ws": "4.0.0",
     "mic": "^2.1.2",
+    "node-fetch": "^2.6.0",
     "ws": "7.3.0"
   },
   "optionalDependencies": {
