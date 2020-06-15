@@ -9,9 +9,7 @@
 'use strict';
 
 const {Database} = require('gateway-addon');
-const fs = require('fs');
 const manifest = require('./manifest.json');
-const path = require('path');
 const VoiceAdapter = require('./lib/adapter');
 
 function loadVoiceAdapter(addonManager, _, errorCallback) {
@@ -19,41 +17,14 @@ function loadVoiceAdapter(addonManager, _, errorCallback) {
   db.open().then(() => {
     return db.loadConfig();
   }).then((config) => {
-    if (process.platform === 'linux') {
-      let capture = '';
-      let playback = '';
-
-      switch (config.microphone) {
-        case 'Analog':
-          capture = 'capture.pcm { \n type plug \n slave.pcm \'hw:0,0\' \n }';
-          break;
-        case 'USB':
-          capture = 'capture.pcm { \n type plug \n slave.pcm \'hw:1,0\' \n }';
-          break;
-        case 'MATRIX':
-          try {
-            require('@matrix-io/matrix-lite');
-          } catch (e) {
-            console.error(e);
-            errorCallback(manifest.id, 'Failed to load matrix module');
-            return;
-          }
-
-          break;
+    if (config.microphone === 'MATRIX') {
+      try {
+        require('@matrix-io/matrix-lite');
+      } catch (e) {
+        console.error(e);
+        errorCallback(manifest.id, 'Failed to load matrix module');
+        return;
       }
-
-      switch (config.speaker) {
-        case 'USB':
-          playback = 'playback.pcm { \n type plug \n slave.pcm \'hw:1,0\' \n }';
-          break;
-        default:
-          playback = 'playback.pcm { \n type plug \n slave.pcm \'hw:0,0\' \n }';
-          break;
-      }
-
-      const asoundConf =
-        `pcm.!default { \n type asym \n ${playback} \n ${capture} \n }\n`;
-      fs.writeFileSync(path.join(__dirname, 'asound.conf'), asoundConf);
     }
 
     new VoiceAdapter(addonManager, config);

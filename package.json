@@ -52,6 +52,7 @@
     "plugin": true,
     "exec": "{nodeLoader} {path}",
     "config": {
+      "keyword": "hey webthings",
       "speaker": "USB",
       "microphone": "USB"
     },
@@ -60,28 +61,52 @@
       "description": "Configuration for your voice addon",
       "properties": {
         "token": {
-          "type": "string",
-          "description": "Navigate to Settings -> Developer -> Create local authorization -> Allow. Then copy the presented JSON Web Token in this field"
+          "title": "Authorization Token",
+          "description": "Navigate to Settings -> Developer -> Create local authorization -> Allow. Then, copy the generated JSON Web Token into this field.",
+          "type": "string"
+        },
+        "keyword": {
+          "title": "Wake Word",
+          "description": "Keyword used to trigger the command.",
+          "type": "string"
         },
         "speaker": {
+          "title": "Speaker",
+          "description": "Speaker to play audio from.",
           "type": "string",
           "enum": [
-            "USB"
-          ],
-          "default": "USB"
+            "Default",
+            "USB",
+            "Custom"
+          ]
+        },
+        "customSpeakerId": {
+          "title": "Custom Speaker ID",
+          "description": "(Linux) If you want to use a custom speaker, rather than one of the default choices, select 'Custom' for 'Speaker' and put the device ID here. Device IDs can be retrieved on the command line with `aplay -L | grep :CARD`.",
+          "type": "string"
         },
         "microphone": {
+          "title": "Microphone",
+          "description": "Microphone to listen on.",
           "type": "string",
           "enum": [
-            "Analog",
+            "Default",
             "MATRIX",
-            "USB"
-          ],
-          "default": "USB"
+            "USB",
+            "Custom"
+          ]
+        },
+        "customMicrophoneId": {
+          "title": "Custom Microphone ID",
+          "description": "(Linux) If you want to use a custom microphone, rather than one of the default choices, select 'Custom' for 'Microphone' and put the device ID here. Device IDs can be retrieved on the command line with `arecord -L | grep :CARD`.",
+          "type": "string"
         }
       },
       "required": [
-        "token"
+        "token",
+        "keyword",
+        "speaker",
+        "microphone"
       ]
     }
   },
@@ -91,6 +116,7 @@
     "express-ws": "4.0.0",
     "mic": "^2.1.2",
     "node-fetch": "^2.6.0",
+    "sound-player": "^1.0.13",
     "ws": "7.3.0"
   },
   "optionalDependencies": {

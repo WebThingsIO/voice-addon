@@ -2,7 +2,6 @@
 *.swp
 *.tgz
 *~
-/asound.conf
 /bin/
 /kenlm/
 /node_modules/
