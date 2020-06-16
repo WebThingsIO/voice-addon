@@ -53,8 +53,8 @@
     "exec": "{nodeLoader} {path}",
     "config": {
       "keyword": "hey webthings",
-      "speaker": "USB",
-      "microphone": "USB"
+      "speaker": "Default",
+      "microphone": "Default"
     },
     "schema": {
       "type": "object",
