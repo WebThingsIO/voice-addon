@@ -40,6 +40,7 @@
     "bin/lmplz",
     "index.js",
     "lib/adapter.js",
+    "lib/command-utils.js",
     "lib/deep-speech-interface.js",
     "lib/deep-speech-worker.js",
     "lib/matrix-microphone.js",
