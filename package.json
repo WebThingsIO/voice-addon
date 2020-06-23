@@ -42,7 +42,6 @@
     "lib/adapter.js",
     "lib/command-utils.js",
     "lib/deep-speech-interface.js",
-    "lib/deep-speech-worker.js",
     "lib/device.js",
     "lib/matrix-microphone.js",
     "lib/property.js",
@@ -117,13 +116,9 @@
     }
   },
   "dependencies": {
-    "deepspeech": "0.6.1",
-    "express": "4.17.1",
-    "express-ws": "4.0.0",
+    "deepspeech": "^0.6.1",
     "mic": "^2.1.2",
-    "node-fetch": "^2.6.0",
-    "sound-player": "^1.0.13",
-    "ws": "7.3.0"
+    "sound-player": "^1.0.13"
   },
   "optionalDependencies": {
     "@matrix-io/matrix-lite": "0.4.6"

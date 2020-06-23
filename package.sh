@@ -46,7 +46,18 @@ python -c "import json, os; \
 npm install --production
 
 # keep only the compiled DS binary that we need
-find node_modules/deepspeech/lib/binding/v0.6.1 -mindepth 1 -maxdepth 1 \! -name "${ADDON_ARCH}" -exec rm -rf {} \;
+module_version=$(node -e 'console.log(`node-v${process.config.variables.node_module_version}`)')
+find node_modules/deepspeech/lib/binding/v0.6.1 \
+  -mindepth 1 \
+  -maxdepth 1 \
+  \! -name "${ADDON_ARCH}" \
+  -exec rm -rf {} \;
+find "node_modules/deepspeech/lib/binding/v0.6.1/${ADDON_ARCH}" \
+  -mindepth 1 \
+  -maxdepth 1 \
+  -type d \
+  \! -name "${module_version}" \
+  -exec rm -rf {} \;
 
 shasum --algorithm 256 manifest.json package.json *.js lib/*.js LICENSE README.md assets/* bin/* > SHA256SUMS
 
