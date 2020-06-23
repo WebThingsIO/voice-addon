@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.2.0"
+    "eslint": "^7.3.0"
   },
   "files": [
     "LICENSE",
@@ -43,7 +43,9 @@
     "lib/command-utils.js",
     "lib/deep-speech-interface.js",
     "lib/deep-speech-worker.js",
+    "lib/device.js",
     "lib/matrix-microphone.js",
+    "lib/property.js",
     "lib/system-microphone.js",
     "manifest.json",
     "node_modules"
