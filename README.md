@@ -5,9 +5,7 @@ A voice add-on for the
 [DeepSpeech](https://github.com/mozilla/DeepSpeech) as the speech-to-text (STT)
 engine.
 
-The add-on uses a microphone attached to the Raspberry Pi. Currently, the
-add-on always listens in the background for new commands, as there is no wake
-word. This is a work in progress.
+The add-on uses a microphone attached to the gateway host.
 
 ## Requirements
 
