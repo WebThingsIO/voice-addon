@@ -17,6 +17,23 @@ function loadVoiceAdapter(addonManager, _, errorCallback) {
   db.open().then(() => {
     return db.loadConfig();
   }).then((config) => {
+    if (!config.token) {
+      errorCallback(manifest.id, 'Add-on must be configured before use');
+      return;
+    }
+
+    if (!config.keyword) {
+      config.keyword = manifest.options.default.keyword;
+    }
+
+    if (!config.speaker) {
+      config.speaker = manifest.options.default.speaker;
+    }
+
+    if (!config.microphone) {
+      config.microphone = manifest.options.default.microphone;
+    }
+
     if (config.microphone === 'MATRIX') {
       try {
         require('@matrix-io/matrix-lite');
