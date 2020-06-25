@@ -18,7 +18,8 @@
     "default": {
       "keyword": "hey webthings",
       "speaker": "Default",
-      "microphone": "Default"
+      "microphone": "Default",
+      "debug": false
     },
     "schema": {
       "type": "object",
@@ -64,6 +65,11 @@
           "title": "Custom Microphone ID",
           "description": "(Linux) If you want to use a custom microphone, rather than one of the default choices, select 'Custom' for 'Microphone' and put the device ID here. Device IDs can be retrieved on the command line with `arecord -L | grep :CARD`.",
           "type": "string"
+        },
+        "debug": {
+          "title": "Enable Debugging",
+          "description": "Enable additional debug logging",
+          "type": "boolean"
         }
       },
       "required": [
