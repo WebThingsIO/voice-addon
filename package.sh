@@ -27,17 +27,20 @@ mkdir "${here}/bin"
 cp "${here}/kenlm/build/bin/build_binary" "${here}/kenlm/build/bin/lmplz" "${here}/bin"
 rm -rf "${here}/kenlm"
 
-# get rid of the DS model we don't need
-REMOVE_SUFFIX="pbmm"
+# download the DeepSpeech model
+pushd "${here}/assets"
+MODEL_SUFFIX="tflite"
 if [[ -n "$ADDON_ARCH" && $ADDON_ARCH =~ x64 ]]; then
-  REMOVE_SUFFIX="tflite"
+  MODEL_SUFFIX="pbmm"
 fi
+curl -L https://github.com/mozilla/DeepSpeech/releases/download/v0.6.1/deepspeech-0.6.1-models.tar.gz | \
+  tar --strip-components=1 -xz "deepspeech-0.6.1-models/output_graph.${MODEL_SUFFIX}"
+popd
 
-rm "${here}/assets/output_graph.${REMOVE_SUFFIX}"
 python -c "import json, os; \
     fname = os.path.join(os.getcwd(), 'package.json'); \
     d = json.loads(open(fname).read()); \
-    d['files'].remove('assets/output_graph.$REMOVE_SUFFIX'); \
+    d['files'].append('assets/output_graph.${MODEL_SUFFIX}'); \
     f = open(fname, 'wt'); \
     json.dump(d, f, indent=2); \
     f.close()

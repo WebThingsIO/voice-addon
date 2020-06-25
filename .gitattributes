@@ -1,6 +1,0 @@
-assets/output_graph.tflite filter=lfs diff=lfs merge=lfs -text
-assets/output_graph.pbmm filter=lfs diff=lfs merge=lfs -text
-assets/error.wav filter=lfs diff=lfs merge=lfs -text
-assets/no-input.wav filter=lfs diff=lfs merge=lfs -text
-assets/success.wav filter=lfs diff=lfs merge=lfs -text
-assets/wake-word.wav filter=lfs diff=lfs merge=lfs -text

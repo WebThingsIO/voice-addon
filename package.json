@@ -45,8 +45,6 @@
     "assets/error.wav",
     "assets/info.json",
     "assets/no-input.wav",
-    "assets/output_graph.pbmm",
-    "assets/output_graph.tflite",
     "assets/success.wav",
     "assets/wake-word.wav",
     "bin/build_binary",

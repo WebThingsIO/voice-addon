@@ -2,6 +2,7 @@
 *.swp
 *.tgz
 *~
+/assets/output_graph.*
 /bin/
 /kenlm/
 /node_modules/
