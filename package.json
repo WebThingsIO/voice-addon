@@ -101,7 +101,7 @@
         },
         "customSpeakerId": {
           "title": "Custom Speaker ID",
-          "description": "(Linux) If you want to use a custom speaker, rather than one of the default choices, select 'Custom' for 'Speaker' and put the device ID here. Device IDs can be retrieved on the command line with `aplay -L | grep :CARD`.",
+          "description": "(Linux) If you want to use a custom speaker, rather than one of the default choices, select 'Custom' for 'Speaker' and put the device ID here. Device IDs can be retrieved on the command line with `aplay -L | egrep '(plug)?hw:CARD='`.",
           "type": "string"
         },
         "microphone": {
@@ -117,7 +117,7 @@
         },
         "customMicrophoneId": {
           "title": "Custom Microphone ID",
-          "description": "(Linux) If you want to use a custom microphone, rather than one of the default choices, select 'Custom' for 'Microphone' and put the device ID here. Device IDs can be retrieved on the command line with `arecord -L | grep :CARD`.",
+          "description": "(Linux) If you want to use a custom microphone, rather than one of the default choices, select 'Custom' for 'Microphone' and put the device ID here. Device IDs can be retrieved on the command line with `arecord -L | egrep '(plug)?hw:CARD='`.",
           "type": "string"
         },
         "debug": {
