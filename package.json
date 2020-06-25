@@ -3,26 +3,36 @@
   "display_name": "Voice Control",
   "version": "2.0.0",
   "description": "Hands-free voice addon with personalized keyword and local voice processing.",
-  "author": "Michael Stegeman",
-  "main": "index.js",
   "scripts": {
     "lint": "eslint ."
   },
+  "main": "index.js",
   "keywords": [
     "mozilla",
     "iot",
     "adapter",
     "voice"
   ],
-  "homepage": "https://github.com/mrstegeman/voice-addon",
+  "homepage": "https://github.com/mozilla-iot/voice-addon",
+  "author": "Mozilla IoT",
   "license": "MPL-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mrstegeman/voice-addon.git"
+    "url": "https://github.com/mozilla-iot/voice-addon.git"
   },
   "bugs": {
-    "url": "https://github.com/mrstegeman/voice-addon/issues"
+    "url": "https://github.com/mozilla-iot/voice-addon/issues"
   },
+  "dependencies": {
+    "deepspeech": "^0.6.1",
+    "js-levenshtein": "^1.1.6",
+    "mic": "^2.1.2",
+    "sound-player": "^1.0.13",
+    "webthings-client": "^1.1.0"
+  },
+  "optionalDependencies": {
+    "@matrix-io/matrix-lite": "0.4.6"
+  }
   "devDependencies": {
     "babel-eslint": "^10.1.0",
     "eslint": "^7.3.0"
@@ -31,11 +41,14 @@
     "LICENSE",
     "README.md",
     "SHA256SUMS",
-    "assets/ding.wav",
-    "assets/dong.wav",
+    "assets/LICENSE",
+    "assets/error.wav",
     "assets/info.json",
+    "assets/no-input.wav",
     "assets/output_graph.pbmm",
     "assets/output_graph.tflite",
+    "assets/success.wav",
+    "assets/wake-word.wav",
     "bin/build_binary",
     "bin/lmplz",
     "index.js",
@@ -114,15 +127,5 @@
         "microphone"
       ]
     }
-  },
-  "dependencies": {
-    "deepspeech": "^0.6.1",
-    "js-levenshtein": "^1.1.6",
-    "mic": "^2.1.2",
-    "sound-player": "^1.0.13",
-    "webthings-client": "^1.1.0"
-  },
-  "optionalDependencies": {
-    "@matrix-io/matrix-lite": "0.4.6"
   }
 }
