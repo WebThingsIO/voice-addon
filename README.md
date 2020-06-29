@@ -25,9 +25,46 @@ The add-on uses a microphone attached to the gateway host.
 * Click _Configure_ on _Voice Addon_ and follow the instructions to get a token.
 * Speak commands into the microphone attached to your Raspberry Pi.
 
-## Sample Commands
+## Supported Commands
 
-TODO
+**NOTE:** &lt;tag&gt; refers to the device name.
+
+* turn the **&lt;tag&gt;** light **&lt;on|off&gt;**
+* turn **&lt;tag&gt;** **&lt;on|off&gt;**
+* turn **&lt;on|off&gt;** the **&lt;tag&gt;** light
+* turn **&lt;on|off&gt;** **&lt;tag&gt;**
+* shut the **&lt;tag&gt;** light off
+* shut **&lt;tag&gt;** off
+* switch the **&lt;tag&gt;** light **&lt;on|off&gt;**
+* switch **&lt;tag&gt;** **&lt;on|off&gt;**
+* switch **&lt;on|off&gt;** the **&lt;tag&gt;** light
+* switch **&lt;on|off&gt;** **&lt;tag&gt;**
+* make the **&lt;tag&gt;** light **&lt;cooler|warmer&gt;**
+* make **&lt;tag&gt;** **&lt;cooler|warmer&gt;**
+* set the **&lt;tag&gt;** light to **&lt;color temperature number&gt;** kelvin
+* set **&lt;tag&gt;** to **&lt;color temperature number&gt;** kelvin
+* set the **&lt;tag&gt;** light to **&lt;color temperature&gt;**
+* set **&lt;tag&gt;** to **&lt;color temperature&gt;**
+* change the **&lt;tag&gt;** light to **&lt;color temperature&gt;**
+* change **&lt;tag&gt;** to **&lt;color temperature&gt;**
+* make the **&lt;tag&gt;** light **&lt;brighter|dimmer&gt;**
+* make **&lt;tag&gt;** **&lt;brighter|dimmer&gt;**
+* **&lt;brighten|dim&gt;** the **&lt;tag&gt;** light
+* **&lt;brighten|dim&gt;** **&lt;tag&gt;**
+* set the **&lt;tag&gt;** light to **&lt;percentage number&gt;** percent
+* set **&lt;tag&gt;** to **&lt;percentage number&gt;** percent
+* change the **&lt;tag&gt;** light to **&lt;percentage number&gt;** percent
+* change **&lt;tag&gt;** to **&lt;percentage number&gt;** percent
+* turn the **&lt;tag&gt;** light **&lt;color&gt;**
+* turn **&lt;tag&gt;** **&lt;color&gt;**
+* make the **&lt;tag&gt;** light **&lt;color&gt;**
+* make **&lt;tag&gt;** **&lt;color&gt;**
+* set the **&lt;tag&gt;** light to **&lt;color&gt;**
+* set **&lt;tag&gt;** to **&lt;color&gt;**
+* change the **&lt;tag&gt;** light to **&lt;color&gt;**
+* change **&lt;tag&gt;** to **&lt;color&gt;**
+* is **&lt;tag&gt;** **&lt;boolean&gt;**
+* is **&lt;tag&gt;** not **&lt;boolean&gt;**
 
 ## Credits
 
