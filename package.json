@@ -1,42 +1,4 @@
 {
-  "name": "voice-addon",
-  "display_name": "Voice Control",
-  "version": "2.0.1",
-  "description": "Hands-free voice addon with personalized keyword and local voice processing.",
-  "scripts": {
-    "lint": "eslint ."
-  },
-  "main": "index.js",
-  "keywords": [
-    "mozilla",
-    "iot",
-    "adapter",
-    "voice"
-  ],
-  "homepage": "https://github.com/mozilla-iot/voice-addon",
-  "author": "Mozilla IoT",
-  "license": "MPL-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mozilla-iot/voice-addon.git"
-  },
-  "bugs": {
-    "url": "https://github.com/mozilla-iot/voice-addon/issues"
-  },
-  "dependencies": {
-    "deepspeech": "^0.6.1",
-    "js-levenshtein": "^1.1.6",
-    "mic": "^2.1.2",
-    "sound-player": "^1.0.13",
-    "webthings-client": "^1.1.0"
-  },
-  "optionalDependencies": {
-    "@matrix-io/matrix-lite": "0.4.6"
-  },
-  "devDependencies": {
-    "babel-eslint": "^10.1.0",
-    "eslint": "^7.3.1"
-  },
   "files": [
     "LICENSE",
     "README.md",
@@ -58,78 +20,117 @@
     "lib/property.js",
     "lib/system-microphone.js",
     "manifest.json",
-    "node_modules"
+    "node_modules",
+    "assets/output_graph.pbmm"
   ],
+  "display_name": "Voice Control",
+  "name": "voice-addon",
+  "license": "MPL-2.0",
+  "author": "Mozilla IoT",
+  "optionalDependencies": {
+    "@matrix-io/matrix-lite": "0.4.6"
+  },
+  "bugs": {
+    "url": "https://github.com/mozilla-iot/voice-addon/issues"
+  },
+  "repository": {
+    "url": "https://github.com/mozilla-iot/voice-addon.git",
+    "type": "git"
+  },
+  "version": "2.0.1",
   "moziot": {
-    "api": {
-      "min": 2,
-      "max": 2
-    },
-    "plugin": true,
-    "exec": "{nodeLoader} {path}",
-    "config": {
-      "keyword": "hey webthings",
-      "speaker": "Default",
-      "microphone": "Default",
-      "debug": false
-    },
     "schema": {
-      "type": "object",
-      "description": "Configuration for your voice addon",
-      "properties": {
-        "token": {
-          "title": "Authorization Token",
-          "description": "Navigate to Settings -> Developer -> Create local authorization -> Allow. Then, copy the generated JSON Web Token into this field.",
-          "type": "string"
-        },
-        "keyword": {
-          "title": "Wake Word",
-          "description": "Keyword used to trigger the command.",
-          "type": "string"
-        },
-        "speaker": {
-          "title": "Speaker",
-          "description": "Speaker to play audio from.",
-          "type": "string",
-          "enum": [
-            "Default",
-            "USB",
-            "Custom"
-          ]
-        },
-        "customSpeakerId": {
-          "title": "Custom Speaker ID",
-          "description": "(Linux) If you want to use a custom speaker, rather than one of the default choices, select 'Custom' for 'Speaker' and put the device ID here. Device IDs can be retrieved on the command line with `aplay -L | egrep '(plug)?hw:CARD='`.",
-          "type": "string"
-        },
-        "microphone": {
-          "title": "Microphone",
-          "description": "Microphone to listen on.",
-          "type": "string",
-          "enum": [
-            "Default",
-            "MATRIX",
-            "USB",
-            "Custom"
-          ]
-        },
-        "customMicrophoneId": {
-          "title": "Custom Microphone ID",
-          "description": "(Linux) If you want to use a custom microphone, rather than one of the default choices, select 'Custom' for 'Microphone' and put the device ID here. Device IDs can be retrieved on the command line with `arecord -L | egrep '(plug)?hw:CARD='`.",
-          "type": "string"
-        },
-        "debug": {
-          "title": "Enable Debugging",
-          "description": "Enable additional debug logging",
-          "type": "boolean"
-        }
-      },
       "required": [
         "token",
         "keyword",
         "speaker",
         "microphone"
-      ]
-    }
-  }
+      ],
+      "type": "object",
+      "description": "Configuration for your voice addon",
+      "properties": {
+        "microphone": {
+          "enum": [
+            "Default",
+            "MATRIX",
+            "USB",
+            "Custom"
+          ],
+          "type": "string",
+          "description": "Microphone to listen on.",
+          "title": "Microphone"
+        },
+        "keyword": {
+          "type": "string",
+          "description": "Keyword used to trigger the command.",
+          "title": "Wake Word"
+        },
+        "customMicrophoneId": {
+          "type": "string",
+          "description": "(Linux) If you want to use a custom microphone, rather than one of the default choices, select 'Custom' for 'Microphone' and put the device ID here. Device IDs can be retrieved on the command line with `arecord -L | egrep '(plug)?hw:CARD='`.",
+          "title": "Custom Microphone ID"
+        },
+        "debug": {
+          "type": "boolean",
+          "description": "Enable additional debug logging",
+          "title": "Enable Debugging"
+        },
+        "token": {
+          "type": "string",
+          "description": "Navigate to Settings -> Developer -> Create local authorization -> Allow. Then, copy the generated JSON Web Token into this field.",
+          "title": "Authorization Token"
+        },
+        "speaker": {
+          "enum": [
+            "Default",
+            "USB",
+            "Custom"
+          ],
+          "type": "string",
+          "description": "Speaker to play audio from.",
+          "title": "Speaker"
+        },
+        "customSpeakerId": {
+          "type": "string",
+          "description": "(Linux) If you want to use a custom speaker, rather than one of the default choices, select 'Custom' for 'Speaker' and put the device ID here. Device IDs can be retrieved on the command line with `aplay -L | egrep '(plug)?hw:CARD='`.",
+          "title": "Custom Speaker ID"
+        }
+      }
+    },
+    "api": {
+      "max": 2,
+      "min": 2
+    },
+    "config": {
+      "debug": false,
+      "microphone": "Default",
+      "speaker": "Default",
+      "keyword": "hey webthings"
+    },
+    "exec": "{nodeLoader} {path}",
+    "plugin": true
+  },
+  "dependencies": {
+    "sound-player": "^1.0.13",
+    "mic": "^2.1.2",
+    "js-levenshtein": "^1.1.6",
+    "deepspeech": "^0.6.1",
+    "webthings-client": "^1.1.0"
+  },
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "keywords": [
+    "mozilla",
+    "iot",
+    "adapter",
+    "voice"
+  ],
+  "devDependencies": {
+    "eslint": "^7.3.1",
+    "babel-eslint": "^10.1.0"
+  },
+  "main": "index.js",
+  "homepage": "https://github.com/mozilla-iot/voice-addon",
+  "description": "Hands-free voice addon with personalized keyword and local voice processing."
 }
