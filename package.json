@@ -1,18 +1,11 @@
 {
   "name": "voice-addon",
-  "display_name": "Voice Control",
   "version": "2.0.2",
   "description": "Hands-free voice addon with personalized keyword and local voice processing.",
   "scripts": {
     "lint": "eslint ."
   },
   "main": "index.js",
-  "keywords": [
-    "mozilla",
-    "iot",
-    "adapter",
-    "voice"
-  ],
   "homepage": "https://github.com/mozilla-iot/voice-addon",
   "author": "Mozilla IoT",
   "license": "MPL-2.0",
@@ -35,7 +28,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.4.0"
+    "eslint": "^7.5.0"
   },
   "files": [
     "LICENSE",
