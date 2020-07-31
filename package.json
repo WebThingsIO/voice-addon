@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "deepspeech": "^0.8.0",
+    "deepspeech-tflite": "^0.8.0",
     "js-levenshtein": "^1.1.6",
     "mic": "^2.1.2",
     "sound-player": "^1.0.13",
@@ -36,6 +37,7 @@
     "SHA256SUMS",
     "assets/LICENSE",
     "assets/alphabet.txt",
+    "assets/deepspeech-model.tflite",
     "assets/error.wav",
     "assets/no-input.wav",
     "assets/success.wav",
