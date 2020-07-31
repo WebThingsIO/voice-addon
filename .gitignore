@@ -2,8 +2,10 @@
 *.swp
 *.tgz
 *~
-/assets/output_graph.*
+/assets/*.pbmm
+/assets/*.tflite
 /bin/
+!/bin/generate_lm.py
 /kenlm/
 /node_modules/
 SHA256SUMS
