@@ -1,6 +1,6 @@
 {
   "name": "voice-addon",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "Hands-free voice addon with personalized keyword and local voice processing.",
   "scripts": {
     "lint": "eslint ."
@@ -17,7 +17,8 @@
     "url": "https://github.com/mozilla-iot/voice-addon/issues"
   },
   "dependencies": {
-    "deepspeech": "^0.6.1",
+    "deepspeech": "^0.8.0",
+    "deepspeech-tflite": "^0.8.0",
     "js-levenshtein": "^1.1.6",
     "mic": "^2.1.2",
     "sound-player": "^1.0.13",
@@ -35,12 +36,14 @@
     "README.md",
     "SHA256SUMS",
     "assets/LICENSE",
+    "assets/alphabet.txt",
+    "assets/deepspeech-model.tflite",
     "assets/error.wav",
-    "assets/info.json",
     "assets/no-input.wav",
     "assets/success.wav",
     "assets/wake-word.wav",
     "bin/build_binary",
+    "bin/generate_scorer_package",
     "bin/lmplz",
     "index.js",
     "lib/adapter.js",

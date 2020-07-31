@@ -24,23 +24,53 @@ make -j build_binary lmplz
 popd
 popd
 mkdir "${here}/bin"
-cp "${here}/kenlm/build/bin/build_binary" "${here}/kenlm/build/bin/lmplz" "${here}/bin"
+cp \
+  "${here}/kenlm/build/bin/build_binary" \
+  "${here}/kenlm/build/bin/lmplz" \
+  "${here}/bin"
 rm -rf "${here}/kenlm"
+
+# download the scorer binary
+pushd "${here}/bin"
+case "$ADDON_ARCH" in
+  linux-x64)
+    _SCORER_TARBALL="native_client.amd64.cpu.linux.tar.xz"
+    ;;
+  linux-arm)
+    _SCORER_TARBALL="native_client.rpi3.cpu.linux.tar.xz"
+    ;;
+  linux-arm64)
+    _SCORER_TARBALL="native_client.arm64.cpu.linux.tar.xz"
+    ;;
+  darwin-x64)
+    _SCORER_TARBALL="native_client.amd64.cpu.osx.tar.xz"
+    ;;
+esac
+
+curl \
+  -L "https://github.com/mozilla/DeepSpeech/releases/download/v0.8.0/${_SCORER_TARBALL}" | \
+  tar xJ generate_scorer_package
+popd
 
 # download the DeepSpeech model
 pushd "${here}/assets"
-MODEL_SUFFIX="tflite"
-if [[ -n "$ADDON_ARCH" && $ADDON_ARCH =~ x64 ]]; then
-  MODEL_SUFFIX="pbmm"
-fi
-curl -L https://github.com/mozilla/DeepSpeech/releases/download/v0.6.1/deepspeech-0.6.1-models.tar.gz | \
-  tar --strip-components=1 -xz "deepspeech-0.6.1-models/output_graph.${MODEL_SUFFIX}"
+curl \
+  -o "deepspeech-model.tflite" \
+  -L "https://github.com/mozilla/DeepSpeech/releases/download/v0.8.0/deepspeech-0.8.0-models.tflite"
 popd
 
+# remove one of the DS dependencies, based on architecture
+KEEP_DEP="deepspeech"
+REMOVE_DEP="deepspeech-tflite"
+if [[ -n "$ADDON_ARCH" && $ADDON_ARCH =~ x64 ]]; then
+  KEEP_DEP="deepspeech-tflite"
+  REMOVE_DEP="deepspeech"
+fi
 python -c "import json, os; \
+    from collections import OrderedDict; \
     fname = os.path.join(os.getcwd(), 'package.json'); \
-    d = json.loads(open(fname).read()); \
-    d['files'].append('assets/output_graph.${MODEL_SUFFIX}'); \
+    d = json.loads(open(fname).read(), object_pairs_hook=OrderedDict); \
+    del d['dependencies']['${REMOVE_DEP}']; \
     f = open(fname, 'wt'); \
     json.dump(d, f, indent=2); \
     f.close()
@@ -50,12 +80,12 @@ npm install --production
 
 # keep only the compiled DS binary that we need
 module_version=$(node -e 'console.log(`node-v${process.config.variables.node_module_version}`)')
-find node_modules/deepspeech/lib/binding/v0.6.1 \
+find "node_modules/${KEEP_DEP}/lib/binding/v0.8.0" \
   -mindepth 1 \
   -maxdepth 1 \
   \! -name "${ADDON_ARCH}" \
   -exec rm -rf {} \;
-find "node_modules/deepspeech/lib/binding/v0.6.1/${ADDON_ARCH}" \
+find "node_modules/${KEEP_DEP}/lib/binding/v0.8.0/${ADDON_ARCH}" \
   -mindepth 1 \
   -maxdepth 1 \
   -type d \

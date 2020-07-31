@@ -2,7 +2,7 @@
 *.swp
 *.tgz
 *~
-/assets/output_graph.*
+/assets/*.tflite
 /bin/
 /kenlm/
 /node_modules/
