@@ -35,6 +35,7 @@
     "README.md",
     "SHA256SUMS",
     "assets/LICENSE",
+    "assets/alphabet.txt",
     "assets/error.wav",
     "assets/no-input.wav",
     "assets/success.wav",

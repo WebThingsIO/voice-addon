@@ -12,7 +12,7 @@ fi
 here=$(readlink -f $(dirname "$0"))
 
 # build KenLM
-rm -rf "${here}/kenlm"
+rm -rf "${here}/kenlm" "${here}/bin"
 mkdir -p "${here}/kenlm/build"
 pushd "${here}/kenlm"
 git clone https://github.com/kpu/kenlm
@@ -23,6 +23,7 @@ cmake -DFORCE_STATIC=ON ../kenlm/
 make -j build_binary lmplz
 popd
 popd
+mkdir "${here}/bin"
 cp \
   "${here}/kenlm/build/bin/build_binary" \
   "${here}/kenlm/build/bin/lmplz" \
