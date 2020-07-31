@@ -20,12 +20,11 @@ curl -L https://bitbucket.org/eigen/eigen/get/3.2.8.tar.bz2 | tar xj
 pushd build
 export EIGEN3_ROOT="${here}/kenlm/eigen-eigen-07105f7124f9"
 cmake -DFORCE_STATIC=ON ../kenlm/
-make -j build_binary filter lmplz
+make -j build_binary lmplz
 popd
 popd
 cp \
   "${here}/kenlm/build/bin/build_binary" \
-  "${here}/kenlm/build/bin/filter" \
   "${here}/kenlm/build/bin/lmplz" \
   "${here}/bin"
 rm -rf "${here}/kenlm"

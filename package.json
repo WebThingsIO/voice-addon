@@ -40,8 +40,6 @@
     "assets/success.wav",
     "assets/wake-word.wav",
     "bin/build_binary",
-    "bin/filter",
-    "bin/generate_lm.py",
     "bin/generate_scorer_package",
     "bin/lmplz",
     "index.js",
