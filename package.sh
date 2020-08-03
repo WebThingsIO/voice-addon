@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+_DS_VERSION="0.8.0"
+
 rm -rf node_modules
 
 if [ -z "${ADDON_ARCH}" ]; then
@@ -48,7 +50,7 @@ case "$ADDON_ARCH" in
 esac
 
 curl \
-  -L "https://github.com/mozilla/DeepSpeech/releases/download/v0.8.0/${_SCORER_TARBALL}" | \
+  -L "https://github.com/mozilla/DeepSpeech/releases/download/v${_DS_VERSION}/${_SCORER_TARBALL}" | \
   tar xJ generate_scorer_package
 popd
 
@@ -56,7 +58,7 @@ popd
 pushd "${here}/assets"
 curl \
   -o "deepspeech-model.tflite" \
-  -L "https://github.com/mozilla/DeepSpeech/releases/download/v0.8.0/deepspeech-0.8.0-models.tflite"
+  -L "https://github.com/mozilla/DeepSpeech/releases/download/v${_DS_VERSION}/deepspeech-${_DS_VERSION}-models.tflite"
 popd
 
 # remove one of the DS dependencies, based on architecture
@@ -80,12 +82,12 @@ npm install --production
 
 # keep only the compiled DS binary that we need
 module_version=$(node -e 'console.log(`node-v${process.config.variables.node_module_version}`)')
-find "node_modules/${KEEP_DEP}/lib/binding/v0.8.0" \
+find "node_modules/${KEEP_DEP}/lib/binding/v${_DS_VERSION}" \
   -mindepth 1 \
   -maxdepth 1 \
   \! -name "${ADDON_ARCH}" \
   -exec rm -rf {} \;
-find "node_modules/${KEEP_DEP}/lib/binding/v0.8.0/${ADDON_ARCH}" \
+find "node_modules/${KEEP_DEP}/lib/binding/v${_DS_VERSION}/${ADDON_ARCH}" \
   -mindepth 1 \
   -maxdepth 1 \
   -type d \
