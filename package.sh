@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-_DS_VERSION="0.8.0"
+_DS_VERSION="0.8.1"
 
 rm -rf node_modules
 
