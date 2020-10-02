@@ -17,6 +17,7 @@
     "url": "https://github.com/WebThingsIO/voice-addon/issues"
   },
   "dependencies": {
+    "deepspeech": "^0.8.2",
     "deepspeech-tflite": "^0.8.2",
     "js-levenshtein": "^1.1.6",
     "mic": "^2.1.2",
