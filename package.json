@@ -1,35 +1,34 @@
 {
   "name": "voice-addon",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Hands-free voice addon with personalized keyword and local voice processing.",
   "scripts": {
     "lint": "eslint ."
   },
   "main": "index.js",
-  "homepage": "https://github.com/mozilla-iot/voice-addon",
-  "author": "Mozilla IoT",
+  "homepage": "https://github.com/WebThingsIO/voice-addon",
+  "author": "WebThingsIO",
   "license": "MPL-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mozilla-iot/voice-addon.git"
+    "url": "https://github.com/WebThingsIO/voice-addon.git"
   },
   "bugs": {
-    "url": "https://github.com/mozilla-iot/voice-addon/issues"
+    "url": "https://github.com/WebThingsIO/voice-addon/issues"
   },
   "dependencies": {
-    "deepspeech": "^0.8.1",
-    "deepspeech-tflite": "^0.8.1",
+    "deepspeech-tflite": "^0.8.2",
     "js-levenshtein": "^1.1.6",
     "mic": "^2.1.2",
     "sound-player": "^1.0.13",
-    "webthings-client": "^1.1.0"
+    "webthings-client": "^2.0.0"
   },
   "optionalDependencies": {
     "@matrix-io/matrix-lite": "0.4.6"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.7.0"
+    "eslint": "^7.10.0"
   },
   "files": [
     "LICENSE",

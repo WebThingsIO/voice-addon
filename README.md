@@ -1,7 +1,7 @@
 # voice-addon
 
 A voice add-on for the
-[Mozilla WebThings Gateway](https://github.com/mozilla-iot/gateway) which uses
+[WebThings Gateway](https://github.com/WebThingsIO/gateway) which uses
 [DeepSpeech](https://github.com/mozilla/DeepSpeech) as the speech-to-text (STT)
 engine.
 

@@ -1,6 +1,11 @@
 #!/bin/bash -e
 
-_DS_VERSION="0.8.1"
+_DS_VERSION="0.8.2"
+
+# Setup environment for building inside Dockerized toolchain
+export NVM_DIR="${HOME}/.nvm"
+[ -s "${NVM_DIR}/nvm.sh" ] && source "${NVM_DIR}/nvm.sh"
+[ $(id -u) = 0 ] && umask 0
 
 rm -rf node_modules
 
@@ -18,9 +23,9 @@ rm -rf "${here}/kenlm" "${here}/bin"
 mkdir -p "${here}/kenlm/build"
 pushd "${here}/kenlm"
 git clone https://github.com/kpu/kenlm
-curl -L https://bitbucket.org/eigen/eigen/get/3.2.8.tar.bz2 | tar xj
+curl -L https://gitlab.com/libeigen/eigen/-/archive/3.2.8/eigen-3.2.8.tar.bz2 | tar xj
 pushd build
-export EIGEN3_ROOT="${here}/kenlm/eigen-eigen-07105f7124f9"
+export EIGEN3_ROOT="${here}/kenlm/eigen-3.2.8"
 cmake -DFORCE_STATIC=ON ../kenlm/
 make -j build_binary lmplz
 popd
