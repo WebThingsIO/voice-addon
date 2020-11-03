@@ -1,6 +1,6 @@
 {
   "name": "voice-addon",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "Hands-free voice addon with personalized keyword and local voice processing.",
   "scripts": {
     "lint": "eslint ."
@@ -17,19 +17,19 @@
     "url": "https://github.com/WebThingsIO/voice-addon/issues"
   },
   "dependencies": {
-    "deepspeech": "^0.8.2",
-    "deepspeech-tflite": "^0.8.2",
+    "deepspeech": "^0.9.0",
+    "deepspeech-tflite": "^0.9.0",
     "js-levenshtein": "^1.1.6",
     "mic": "^2.1.2",
     "sound-player": "^1.0.13",
-    "webthings-client": "^2.0.0"
+    "webthings-client": "^2.1.0"
   },
   "optionalDependencies": {
     "@matrix-io/matrix-lite": "0.4.6"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.10.0"
+    "eslint": "^7.12.1"
   },
   "files": [
     "LICENSE",

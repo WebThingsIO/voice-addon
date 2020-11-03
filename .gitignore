@@ -7,3 +7,4 @@
 /kenlm/
 /node_modules/
 SHA256SUMS
+/package-lock.json

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-_DS_VERSION="0.8.2"
+_DS_VERSION="0.9.0"
 
 # Setup environment for building inside Dockerized toolchain
 export NVM_DIR="${HOME}/.nvm"
