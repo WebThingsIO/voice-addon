@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
-_DS_VERSION="0.9.0"
+_STT_VERSION="1.2.0"
+_STT_MODEL_VERSION="1.0.0"
 
 # Setup environment for building inside Dockerized toolchain
 export NVM_DIR="${HOME}/.nvm"
@@ -41,58 +42,41 @@ rm -rf "${here}/kenlm"
 pushd "${here}/bin"
 case "$ADDON_ARCH" in
   linux-x64)
-    _SCORER_TARBALL="native_client.amd64.cpu.linux.tar.xz"
+    _SCORER_TARBALL="native_client.tflite.Linux.tar.xz"
     ;;
   linux-arm)
-    _SCORER_TARBALL="native_client.rpi3.cpu.linux.tar.xz"
+    _SCORER_TARBALL="native_client.tflite.linux.armv7.tar.xz"
     ;;
   linux-arm64)
-    _SCORER_TARBALL="native_client.arm64.cpu.linux.tar.xz"
+    _SCORER_TARBALL="native_client.tflite.linux.aarch64.tar.xz"
     ;;
   darwin-x64)
-    _SCORER_TARBALL="native_client.amd64.cpu.osx.tar.xz"
+    _SCORER_TARBALL="native_client.tflite.macOS.tar.xz"
     ;;
 esac
 
 curl \
-  -L "https://github.com/mozilla/DeepSpeech/releases/download/v${_DS_VERSION}/${_SCORER_TARBALL}" | \
+  -L "https://github.com/coqui-ai/STT/releases/download/v${_STT_VERSION}/${_SCORER_TARBALL}" | \
   tar xJ generate_scorer_package
 popd
 
 # download the DeepSpeech model
 pushd "${here}/assets"
 curl \
-  -o "deepspeech-model.tflite" \
-  -L "https://github.com/mozilla/DeepSpeech/releases/download/v${_DS_VERSION}/deepspeech-${_DS_VERSION}-models.tflite"
+  -o "model.tflite" \
+  -L "https://github.com/coqui-ai/STT-models/releases/download/english%2Fcoqui%2Fv${_STT_MODEL_VERSION}-huge-vocab/model.tflite"
 popd
-
-# remove one of the DS dependencies, based on architecture
-KEEP_DEP="deepspeech"
-REMOVE_DEP="deepspeech-tflite"
-if [[ -n "$ADDON_ARCH" && $ADDON_ARCH =~ x64 ]]; then
-  KEEP_DEP="deepspeech-tflite"
-  REMOVE_DEP="deepspeech"
-fi
-python -c "import json, os; \
-    from collections import OrderedDict; \
-    fname = os.path.join(os.getcwd(), 'package.json'); \
-    d = json.loads(open(fname).read(), object_pairs_hook=OrderedDict); \
-    del d['dependencies']['${REMOVE_DEP}']; \
-    f = open(fname, 'wt'); \
-    json.dump(d, f, indent=2); \
-    f.close()
-"
 
 npm install --production
 
-# keep only the compiled DS binary that we need
+# keep only the compiled STT binary that we need
 module_version=$(node -e 'console.log(`node-v${process.config.variables.node_module_version}`)')
-find "node_modules/${KEEP_DEP}/lib/binding/v${_DS_VERSION}" \
+find "node_modules/stt/lib/binding/v${_STT_VERSION}" \
   -mindepth 1 \
   -maxdepth 1 \
   \! -name "${ADDON_ARCH}" \
   -exec rm -rf {} \;
-find "node_modules/${KEEP_DEP}/lib/binding/v${_DS_VERSION}/${ADDON_ARCH}" \
+find "node_modules/stt/lib/binding/v${_STT_VERSION}/${ADDON_ARCH}" \
   -mindepth 1 \
   -maxdepth 1 \
   -type d \

@@ -2,7 +2,7 @@
 
 A voice add-on for the
 [WebThings Gateway](https://github.com/WebThingsIO/gateway) which uses
-[DeepSpeech](https://github.com/mozilla/DeepSpeech) as the speech-to-text (STT)
+[:frog:STT](https://github.com/coqui-ai/stt) as the speech-to-text (STT)
 engine.
 
 The add-on uses a microphone attached to the gateway host.
@@ -69,4 +69,4 @@ The add-on uses a microphone attached to the gateway host.
 ## Credits
 
 This add-on was originally created by André Natal (@andrenatal). DeepSpeech
-support was initially added by Alexandre Lissy (@lissyx).
+support was initially added by Alexandre Lissy (@lissyx), and upgraded to Coqui (:frog:STT) by Josh Meyer (@JRMeyer)
